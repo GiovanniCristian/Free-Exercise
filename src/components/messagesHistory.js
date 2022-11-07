@@ -12,12 +12,16 @@ const MessageHistory = () => {
   return (
 <section className='container'>  
     <div className='dropdown'>
-        {context.getUsernames(selectedUsername).map((username, idx)=>(
-            <select className="select" key={idx}>
-                <option value={username}>{username}</option>
-            </select>
-        )
-    )}
+        <select
+            value={selectedUsername}
+            onChange={( event ) => setSelectedUsername( event.target.value )}
+        >
+            <option value=''>Select user</option>
+            {context.getUsernames().map( ( username ) => (
+                // Siccome gli username sono unici, possiamo usarli come 'key'.
+                <option key={username} value={username}>{username}</option>
+            ))}
+        </select>
     </div>
 
     <div className='table-div'>
@@ -28,16 +32,16 @@ const MessageHistory = () => {
         variabile di stato 'selectedUsername' */}
 
         {selectedUsername ? (
-            <table>
-            <thead>
-                <tr>
-                    <th>Message History: {selectedUsername}</th>
+            <table className='table'>
+            <thead className='thead'>
+                <tr className='th'>
+                    <th className='th'>{ selectedUsername }</th>
                 </tr>
             </thead>
             <tbody>
-                {context.getUserMessages( selectedUsername ).map( ( message, idx ) => (
+                {context.getUserMessages( selectedUsername ).map( ( messageData, idx ) => (
                     <tr key={idx}>
-                        <td>{message}</td>
+                        <td className='td-map'>{messageData.message}</td>
                     </tr>
                 ))
                 }

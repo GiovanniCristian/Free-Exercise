@@ -38,17 +38,11 @@ function App() {
         []
       );
     },
-    getUserMessages: ( username ) => {
-      return messages.reduce ((username , messageData) => {
-        const messagesFound = messages.find(
-          messages => messages === messageData.username
-        );
-        return (messagesFound ? messages : [ ...messages, messageData.username ]);
-      },
-      []
-      );
-    }
 
+    // In questo caso è sufficiente usare 'filter()'.
+    getUserMessages: ( username ) => {
+      return messages.filter( messageData => messageData.username === username );
+    }
   };
 
   return (
