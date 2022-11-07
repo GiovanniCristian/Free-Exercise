@@ -1,0 +1,29 @@
+.ul {
+    height: 80px;
+    display: flex;
+    list-style: none;
+    text-decoration: none;
+    justify-content: space-evenly;
+    align-items: center;
+    background-color: rgba(0, 0, 255, 0.486);
+}
+
+.li {
+    text-decoration: none;
+    font-size: large;
+    font-weight: bold;
+    color: black;
+}
+
+.messagePage , .messageHistory {
+    text-decoration: none;
+    font-size: large;
+    font-weight: bold;
+    color: black;
+    transition: 0.3s ease-in-out;
+}
+
+.messagePage:hover , .messageHistory:hover {
+    color: white;
+}
+

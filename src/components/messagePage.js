@@ -1,50 +1,79 @@
 import React from 'react';
 import {useState , useContext} from 'react';
-import {NamesContext} from 'react';
+import { MessagesContext } from '../context';
+import "../styles/messagePage.css";
 
 function MessagePage() {
 
-    const context = useContext( NamesContext );
-    const [user, setUser] = useState("");
-    const [email, setEmail] = useState("");
-  
+    const context = useContext( MessagesContext );
     
-    let usersAdd = context.pushNames( user );
+    const [ username, setUsername ] = useState( "" );
+    const [ message, setMessage ] = useState( "" );
+ 
+    // Per il momento questo mettiamolo da parte!
+    //const [email, setEmail] = useState("");
+  
+
+    const onSubmitHandler = ( event ) => {
+      // Necessario per evitare il refresh della pagina.
+      event.preventDefault();
+
+      context.pushMessage( username, message );
+
+      // Ricorda di resettare i campi di input dopo il submit:
+      setUsername( '' );
+      setMessage( '' );
+    };
+
+    // Questo solo a scopo esemplificativo.
+    console.log( context.getUsernames() );
   
     return (
     <>
-      <form>
-        <h1>Your Message</h1>
+      <form
+        // Aggiungiamo l'evento onSubmit che va a sostituire
+        // l' onClick del pulsante – in generale è preferibile.
+        onSubmit={onSubmitHandler}
+        className="form"
+      >
+        <h1 className='h1'>Your Message</h1>
   
-        <label>
+        <label className='label'>
           Name:
           <input
+            className='input'
             name="name"
             type="name"
-            value={user}
-            onChange={e => setUser(e.target.value)}
+            value={username}
+            onChange={e => setUsername(e.target.value)}
             required />
         </label>
 
-        <label>
+        {/* Per il momento questo mettiamolo da parte!
+        <label className='label'>
           Email:
           <input
+            className='input'
             name="email"
             type="email"
             value={email}
             onChange={e => setEmail(e.target.value)}
             required />
-        </label>
+        </label> */}
   
-        <label>
+        <label className='label'>
           Your Message:
-          <input
-            name="message"
-            type="text"
+          <textarea
+            // Questo campo è 'required'
+            className='textarea'
+            required
+            name='message'
+            value={message}
+            onChange={e => setMessage( e.target.value )}
           />
         </label>
-  
-        <button type='submit' onClick={usersAdd}>Send!</button>
+
+        <button className="btn" type='submit'>Send!</button>
       </form>
     </>
     );

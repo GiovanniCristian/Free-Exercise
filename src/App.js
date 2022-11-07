@@ -1,40 +1,69 @@
-import './App.css';
-import MessageHistory from './components/messageHistory';
-import MessagePage from './components/messagePage';
 import { useState } from 'react';
-import { NamesContext } from './context';
-import DropdownList from './components/dropdownList';
+import './App.css';
+
+import { MessagesContext } from './context';
+import MessagesHistory from './components/messagesHistory';
+import MessagePage from './components/messagePage';
+import Layout from './components/layout';
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route
+} from 'react-router-dom';
 
 
 function App() {
 
-  const [ users, setUsers ] = useState( "" );
+  const [ messages, setMessages ] = useState( [] );
 
-  const nameContext = {
-    pushNames: ( user ) => setUsers( users => {
-      let newName = [ ...users ];
+  const contextValue = {
+    pushMessage: ( username, message ) => setMessages( ( currentMessages ) => {
+      const newMessages = [ ...currentMessages ];
 
-      newName.push( user );
+      newMessages.push( { username, message } );
 
-      return newName;
+      return newMessages;
     }),
-      getDropNames: () => users[users.length - 1],
-      users
-  };
+    getUsernames: () => {
+      return messages.reduce(
+        ( usernames, messageData ) => {
+          const usernameFound = usernames.find(
+            username => username === messageData.username
+          );
 
+          // Aggiorniamo l'array di usernames solo se nello stesso
+          // lo username valutato non esiste ancora.
+          return ( usernameFound ? usernames : [ ...usernames, messageData.username ] );
+        },
+        []
+      );
+    },
+    getUserMessages: ( username ) => {
+      return messages.reduce ((username , messageData) => {
+        const messagesFound = messages.find(
+          messages => messages === messageData.username
+        );
+        return (messagesFound ? messages : [ ...messages, messageData.username ]);
+      },
+      []
+      );
+    }
+
+  };
 
   return (
   <>
-    <NamesContext.Provider value={nameContext}>
-      <section>
-          <MessagePage />
-          <MessageHistory />
-      </section>
-    </NamesContext.Provider>
-
-    <div>
-      <DropdownList />
-    </div>
+    <MessagesContext.Provider value={contextValue}>
+      <Router>
+        <Routes>
+          <Route exact path='/' element={ <Layout /> }>
+            <Route path='/' element={ <MessagePage /> } />
+            <Route path='messageshistory' element={ <MessagesHistory /> } />
+          </Route>
+          <Route path="*" element={<div>Error 404</div>} />
+        </Routes>
+      </Router>
+    </MessagesContext.Provider>
   </>
   );
 }
